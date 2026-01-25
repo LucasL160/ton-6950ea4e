@@ -1,0 +1,38 @@
+name: Deploy to Testnet (manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run deploy (dry run unless CONFIRM_DEPLOY=true)
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
+          SECRET_KEY_BASE64: ${{ secrets.SECRET_KEY_BASE64 }}
+          WORKCHAIN: ${{ secrets.WORKCHAIN }}
+          SUBWALLET_ID: ${{ secrets.SUBWALLET_ID }}
+          TIMEOUT: ${{ secrets.TIMEOUT }}
+          DEPLOY_VALUE: ${{ secrets.DEPLOY_VALUE }}
+          DEPLOY_SAFE_MARGIN: ${{ secrets.DEPLOY_SAFE_MARGIN }}
+          DEPLOY_FALLBACK: ${{ secrets.DEPLOY_FALLBACK }}
+          CONFIRM_DEPLOY: ${{ secrets.CONFIRM_DEPLOY }} # must be "true" to actually send
+        run: npx ts-node scripts/deploy.ts
