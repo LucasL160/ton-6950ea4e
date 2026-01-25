@@ -34,7 +34,7 @@ async function pollOnce() {
     try {
         // TODO: Replace with TonClient or provider calls to fetch transactions for `address`
         // Example pseudocode:
-        // const { TonClient } = require('@ton/ton');
+        // import { TonClient } from '@ton/ton';
         // const client = new TonClient({ endpoint: RPC_URL });
         // const txs = await client.getTransactions(address);
         // for (const tx of txs) { if (tx.incoming && tx.value > 0) await onDeposit(tx); }
