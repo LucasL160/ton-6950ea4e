@@ -10,17 +10,17 @@
 import 'dotenv/config';
 import { contractAddress } from '@ton/core';
 import { HighloadWalletV3Code } from '../wrappers/compiled';
-import { highloadWalletV3ConfigToCell } from '../wrappers/HighloadWalletV3';
+import { beginCell } from '@ton/core';
 
-// Default to a well-known public TON RPC endpoint; override via the RPC_URL environment variable.
-const RPC_URL = process.env.RPC_URL || 'https://toncenter.com/api/v2/jsonRPC';
+
+const RPC_URL = process.env.RPC_URL || 'https://net.ton.dev';
 const WORKCHAIN = Number(process.env.WORKCHAIN || 0);
 const SUBWALLET_ID = Number(process.env.SUBWALLET_ID || 0x10ad);
 const TIMEOUT = Number(process.env.TIMEOUT || 3600);
 
-const publicKeyPlaceholder = Buffer.alloc(32, 0);
-const data = highloadWalletV3ConfigToCell({ publicKey: publicKeyPlaceholder, subwalletId: SUBWALLET_ID, timeout: TIMEOUT });
-const init = { code: HighloadWalletV3Code, data };
+const code = beginCell().endCell();
+const data = beginCell().endCell();
+const init = { code, data };
 const address = contractAddress(WORKCHAIN, init);
 
 console.log('Monitoring deposits for address:', address.toString({ urlSafe: true, bounceable: true }));
